@@ -1,18 +1,21 @@
+package old;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 
-public class Main {
+public class Abc014_3 {
 
-    //https://atcoder.jp/contests/abc226/tasks/abc226_a
+    //https://atcoder.jp/contests/abc014/tasks/abc014_3
     public static void main(String[] args) {
+        int n;
 
+        long[][] map;
         PrintWriter out = new PrintWriter(System.out);
         FastScanner fs = new FastScanner(System.in);
-        String str = fs.next();
-        double d = Double.parseDouble(str);
-        System.out.println(Math.round(d));
+        n = fs.nextInt();
+        System.out.println(n);
     }
 
 
