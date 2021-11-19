@@ -48,4 +48,4 @@ test {
     }
 }
 // Define the main class for the application
-mainClassName = 'atcoder_codes.App'
+mainClassName = 'Main'
