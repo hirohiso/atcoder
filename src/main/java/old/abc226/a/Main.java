@@ -1,3 +1,5 @@
+package old.abc226.a;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -10,14 +12,16 @@ public class Main {
     public static void main(String[] args) {
         solve(System.in,System.out);
     }
-    public static void solve(InputStream in, PrintStream out){
+
+    public static void solve(InputStream in,PrintStream out){
         PrintWriter pw = new PrintWriter(out);
-        old.abc226.a.Main.FastScanner fs = new old.abc226.a.Main.FastScanner(in);
+        FastScanner fs = new FastScanner(in);
         String str = fs.next();
         double d = Double.parseDouble(str);
         pw.println(Math.round(d));
         pw.flush();
     }
+
 
     //-------------------------------------------------------------------
     public static class FastScanner {
