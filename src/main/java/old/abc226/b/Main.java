@@ -1,3 +1,5 @@
+package old.abc226.b;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -15,7 +17,7 @@ public class Main {
     }
     public static void solve(InputStream in, PrintStream out){
         PrintWriter pw = new PrintWriter(out);
-        Main.FastScanner fs = new Main.FastScanner(in);
+        FastScanner fs = new FastScanner(in);
         //==================
 
         int n = fs.nextInt();
