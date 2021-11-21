@@ -5,35 +5,25 @@ class MainTest extends Specification {
     @Shared
     def input = [
             """\
-4
-2 1 2
-2 1 1
-2 2 1
-2 1 2
+16
 """,
             """\
-5
-1 1
-1 1
-1 2
-2 1 1
-3 1 1 1
+2
 """,
             """\
-1
-1 1
+183
 """,
     ]
     @Shared
     def output = [
             """\
-3
+pon
 """,
             """\
-4
+hon
 """,
             """\
-1
+bon
 """,
 
     ]

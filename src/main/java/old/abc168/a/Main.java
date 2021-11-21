@@ -1,32 +1,37 @@
+package old.abc168.a;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class Main {
 
-    //https://atcoder.jp/contests/abc168/tasks/abc168_a
+    //https://atcoder.jp/contests/abc226/tasks/abc226_b
     public static void main(String[] args) {
         solve(System.in,System.out);
     }
     public static void solve(InputStream in, PrintStream out){
         PrintWriter pw = new PrintWriter(out);
-        Main.FastScanner fs = new Main.FastScanner(in);
+        FastScanner fs = new FastScanner(in);
         //==================
 
         int n = fs.nextInt();
-        int first = n % 10;
-
-        String[] table = new String[]{
-                "pon",
-                "pon","hon","bon",
-                "hon","hon","pon",
-                "hon","pon", "hon"
-        };
-
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            int l = fs.nextInt();
+            int[] arr = new int[l];
+            for (int j = 0; j < l; j++) {
+                arr[j] = fs.nextInt();
+            }
+            set.add(Arrays.toString(arr));
+        }
+        pw.println(set.size());
         //==================
-        pw.println(table[first]);
         pw.flush();
     }
 
