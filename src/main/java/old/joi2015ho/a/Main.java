@@ -1,8 +1,9 @@
+package old.joi2015ho.a;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class Main {
