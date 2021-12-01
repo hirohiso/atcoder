@@ -6,27 +6,51 @@ import java.util.NoSuchElementException;
 
 public class Main {
 
-    //https://atcoder.jp/contests/abc168/tasks/abc168_a
+    //https://atcoder.jp/contests/jsc2019-qual/tasks/jsc2019_qual_b
     public static void main(String[] args) {
-        solve(System.in,System.out);
+        solve(System.in, System.out);
     }
-    public static void solve(InputStream in, PrintStream out){
+
+    public static void solve(InputStream in, PrintStream out) {
+        long mod = 1_000_000_000 + 7;
+
         PrintWriter pw = new PrintWriter(out);
-        Main.FastScanner fs = new Main.FastScanner(in);
+        FastScanner fs = new FastScanner(in);
         //==================
 
         int n = fs.nextInt();
-        int first = n % 10;
+        long k = fs.nextLong();
+        int[] an = new int[n];
+        long[] count = new long[2001];
 
-        String[] table = new String[]{
-                "pon",
-                "pon","hon","bon",
-                "hon","hon","pon",
-                "hon","pon", "hon"
-        };
-
+        for (int i = 0; i < n; i++) {
+            an[i] = fs.nextInt();
+            count[an[i]]++;
+        }
+        int total = 0;
+        int temp = 0;
+        for (int i = 0; i < count.length; i++) {
+            if (count[i] != 0) {
+                total += temp;
+                temp += count[i];
+                total %= mod;
+                temp %= mod;
+            }
+        }
+        long p = 0;
+        for (int i = 0; i < an.length; i++) {
+            for (int j = i + 1; j < an.length; j++) {
+                if (an[i] > an[j]) {
+                    p++;
+                    p %= mod;
+                }
+            }
+        }
+        long unit = (p * k) % mod;
         //==================
-        pw.println(table[first]);
+        long t = ((k * (k - 1))% mod / 2) ;
+        long group = (total * t) % mod;
+        pw.println((group + unit) % mod);
         pw.flush();
     }
 
