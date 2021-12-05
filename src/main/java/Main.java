@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 public class Main {
 
-    // https://atcoder.jp/contests/abc195/tasks/abc195_a
+    // https://atcoder.jp/contests/abc207/tasks/abc207_c
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
@@ -16,12 +16,48 @@ public class Main {
         PrintWriter pw = new PrintWriter(out);
         FastScanner fs = new FastScanner(in);
         //==================
-        int m = fs.nextInt();
-        int h = fs.nextInt();
+        boolean[] isEndClose = new boolean[]{true, false, true, false};
+        boolean[] isStartClose = new boolean[]{true, true, false, false};
+
+        int n = fs.nextInt();
+
+        int[][] range = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            range[i][0] = fs.nextInt();
+            range[i][1] = fs.nextInt();
+            range[i][2] = fs.nextInt();
+        }
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // i << j
+                if (isEndClose[range[i][0] - 1] && isStartClose[range[j][0] - 1]) {
+                    if (range[i][2] < range[j][1]) {
+                        continue;
+                    }
+                }else{
+                    if (range[i][2] <= range[j][1]) {
+                        continue;
+                    }
+                }
+
+                //j << i
+                if (isEndClose[range[j][0] - 1] && isStartClose[range[i][0] - 1]) {
+                    if (range[j][2] < range[i][1]) {
+                        continue;
+                    }
+                }else{
+                    if (range[j][2] <= range[i][1]) {
+                        continue;
+                    }
+                }
+                count++;
+            }
+        }
 
         //==================
 
-        pw.println(h % m == 0 ? "Yes" : "No");
+        pw.println(count);
         pw.flush();
     }
 
