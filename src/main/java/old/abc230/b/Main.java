@@ -1,13 +1,14 @@
+package old.abc230.b;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class Main {
 
-    // https://atcoder.jp/contests/abc072/tasks/arc082_a
+    //https://atcoder.jp/contests/abc230/tasks/abc230_b
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
@@ -17,23 +18,12 @@ public class Main {
         FastScanner fs = new FastScanner(in);
         //==================
 
-        int n = fs.nextInt();
-        int[] arr = new int[n];
-        for (int i = 0; i < n; i++) {
-            arr[i] = fs.nextInt();
-        }
-        int[] count = new int[100002];
-        for (int i = 0; i < n; i++) {
-            count[arr[i]]++;
-            count[arr[i] + 1]++;
-            if (arr[i] > 0) {
-                count[arr[i] - 1]++;
-            }
-        }
+        final String TEXT = "oxxoxxoxxoxxoxx";
+        String str = fs.next();
 
         //==================
 
-        //pw.println(TEXT.contains(str) ? "Yes" : "No");
+        pw.println(TEXT.contains(str) ? "Yes":"No");
         pw.flush();
     }
 
