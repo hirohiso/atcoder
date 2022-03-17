@@ -1,13 +1,14 @@
+package old.abc150.d;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class Main {
 
-    // https://atcoder.jp/contests/sumitrust2019/tasks/sumitb2019_e
+    // https://atcoder.jp/contests/abc150/tasks/abc150_d
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
@@ -18,42 +19,27 @@ public class Main {
         //==================
 
         int n = fs.nextInt();
+        int m = fs.nextInt();
 
-        int[] rgb = new int[3];
+        int result = 0;
 
-        int an;
-        long result = 1;
-        long e = 1000000007;
-        for (int i = 0; i < n; i++) {
-            an = fs.nextInt();
-            int count = count(an,rgb);
-            result = (result * count) % e;
-            add(an,rgb);
-            //System.out.println(Arrays.toString(rgb));
-        }
+
         //==================
 
         pw.println(result);
         pw.flush();
     }
 
-    static int count(int target,int[] array) {
-        int result = 0;
-        for(int n : array){
-            if (n == target){
-                result++;
-            }
+    //最小公倍数
+    static long lcm(long a, long b) {
+        long temp;
+        long c = a;
+        c *= b;
+        while ((temp = a % b) != 0) {
+            a = b;
+            b = temp;
         }
-        return result;
-    }
-
-    static void add(int target,int[] array){
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target){
-                array[i]++;
-                return;
-            }
-        }
+        return (long) (c / b);
     }
 
 
