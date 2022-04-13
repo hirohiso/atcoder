@@ -1,3 +1,5 @@
+package old.tenka1_2018.d;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -6,7 +8,7 @@ import java.util.NoSuchElementException;
 
 public class Main {
 
-    // https://atcoder.jp/contests/typical90/tasks/typical90_b
+    // https://atcoder.jp/contests/tenka1-2018-beginner/tasks/tenka1_2018_d
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
@@ -16,51 +18,57 @@ public class Main {
         FastScanner fs = new FastScanner(in);
         //==================
 
-        // 0 : (
-        // 1: )
         int n = fs.nextInt();
-        long max = 1 << n;
-        for (long i = 0; i < max; i++) {
-            if (judge(i, n)) {
-                pw.println(text(i, n));
-            }
+        if (n == 1) {
+            pw.println("Yes");
+            pw.println("2");
+            pw.println("1 1");
+            pw.println("1 1");
+            pw.flush();
+            return;
+        }
+        int k;
+        if ((k = judge(n)) == -1) {
+            pw.println("No");
+            pw.flush();
+            return;
         }
 
+        System.out.println("Yes");
+        System.out.println(k);
+        for (int i = 1; i <= k; i++) {
+            System.out.print(k -1);
+            System.out.print(" ");
+            for (int j = 1, b = i -1; j <= i - 1; b =b + (k -(j+1)),j++) {
+                System.out.print(b);
+                System.out.print(" ");
+            }
+            for (int j = 1, a = ((2* k - i) * (i -1) /2 ) + 1; j <= k - i; a++,j++) {
+                System.out.print(a);
+                System.out.print(" ");
+            }
+
+            System.out.println("");
+        }
 
         long result = 1;
         //==================
 
-
+        pw.println("");
         pw.flush();
     }
 
-    static boolean judge(long x, int n) {
-        int count = 0;
+    static int judge(int n) {
         for (int i = 1; i <= n; i++) {
-            if ((x & 1) == 1) {
-                count++;
+            if (i * (i - 1) == 2 * n) {
+                return i;
+            } else if (i * (i - 1) > 2 * n) {
+                return -1;
             } else {
-                count--;
+                continue;
             }
-            if (count < 0) {
-                return false;
-            }
-            x = x >> 1;
         }
-        return count == 0 ? true : false;
-    }
-
-    static String text(long x, int n) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= n; i++) {
-            if ((x & 1) == 1) {
-                sb.append(')');
-            } else {
-                sb.append('(');
-            }
-            x = x >> 1;
-        }
-        return sb.reverse().toString();
+        return -1;
     }
 
 
