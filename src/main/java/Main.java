@@ -2,11 +2,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class Main {
 
-    // https://atcoder.jp/contests/typical90/tasks/typical90_b
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
@@ -14,65 +14,41 @@ public class Main {
     public static void solve(InputStream in, PrintStream out) {
         PrintWriter pw = new PrintWriter(out);
         FastScanner fs = new FastScanner(in);
+
         //==================
+        int N = fs.nextInt();
 
-        // 0 : (
-        // 1: )
-        int n = fs.nextInt();
-        long max = 1 << n;
-        for (long i = 0; i < max; i++) {
-            if (judge(i, n)) {
-                pw.println(text(i, n));
-            }
-        }
+        String result = switch (N){
+            case 0 -> "zero";
+            case 1 -> "one";
+            case 2 -> new Test(2,3).x + "";
+            default -> "others";
+        };
 
-
-        long result = 1;
-        //==================
-
-
+        pw.println(result);
+        //=================
         pw.flush();
     }
 
-    static boolean judge(long x, int n) {
-        int count = 0;
-        for (int i = 1; i <= n; i++) {
-            if ((x & 1) == 1) {
-                count++;
-            } else {
-                count--;
-            }
-            if (count < 0) {
-                return false;
-            }
-            x = x >> 1;
-        }
-        return count == 0 ? true : false;
-    }
-
-    static String text(long x, int n) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= n; i++) {
-            if ((x & 1) == 1) {
-                sb.append(')');
-            } else {
-                sb.append('(');
-            }
-            x = x >> 1;
-        }
-        return sb.reverse().toString();
-    }
-
-
+    public static record Test(int x,int y){};
     //-------------------------------------------------------------------
+
     public static class FastScanner {
         InputStream in;
         byte[] buffer = new byte[1 << 10];
         int length = 0;
         int ptr = 0;
+        private final Predicate<Byte> isPrintable;
+
 
         public FastScanner(InputStream in) {
             this.in = in;
+            this.isPrintable = b -> (33 < b && b < 126);
+        }
+
+        public FastScanner(InputStream in, Predicate<Byte> predicate) {
+            this.in = in;
+            this.isPrintable = predicate;
         }
 
         private boolean hasNextByte() {
@@ -107,27 +83,54 @@ public class Main {
             return hasNextByte();
         }
 
-
         private boolean isPrintable(byte b) {
             return 33 < b && b < 126;
         }
 
-        public String next() {
+
+        private String innerNext(Predicate<Byte> isReadable) {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             StringBuilder sb = new StringBuilder();
             byte b = read();
-            while (isPrintable(b)) {
+            while (isReadable.test(b)) {
                 sb.appendCodePoint(b);
                 b = read();
             }
             return sb.toString();
         }
 
+        public String next() {
+            return innerNext(b -> (33 < b && b < 126));
+        }
 
         public int nextInt() {
             return (int) nextLong();
+        }
+
+        public int[] nextIntArray(int n) {
+            int[] result = new int[n];
+            for (int i = 0; i < n; i++) {
+                result[i] = nextInt();
+            }
+            return result;
+        }
+
+        public String[] nextArray(int n) {
+            String[] result = new String[n];
+            for (int i = 0; i < n; i++) {
+                result[i] = next();
+            }
+            return result;
+        }
+
+        public long[] nextLongArray(int n) {
+            long[] result = new long[n];
+            for (int i = 0; i < n; i++) {
+                result[i] = nextLong();
+            }
+            return result;
         }
 
         public long nextLong() {

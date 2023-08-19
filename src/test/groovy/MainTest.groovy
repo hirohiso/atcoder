@@ -11,22 +11,6 @@ class MainTest extends Specification {
 3
 
 """,
-"""\
-4
-
-""",
-"""\
-2
-
-""",
-"""\
-1
-
-""",
-"""\
-6
-
-""",
     ]
     @Shared
     def output = [
@@ -36,26 +20,6 @@ Yes
 2 1 2
 2 3 1
 2 2 3
-""",
-"""\
-No
-""",
-"""\
-No
-""",
-"""\
-Yes
-2
-2 1
-2 1
-""",
-"""\
-Yes
-4
-3 1 2 3 
-3 1 4 5 
-3 2 4 6
-3 3 5 6
 """,
     ]
     //@formatter:on
@@ -79,5 +43,22 @@ Yes
         exp << output
     }
 
+    def "testFiles"() {
+        given:
+        def input = new File("./src/test/resources/case1/in.txt").getText()
+        def output = new File("./src/test/resources/case1/out.txt").getText()
+
+        def is = new ByteArrayInputStream(input.getBytes("UTF-8"))
+        def bos = new ByteArrayOutputStream()
+        def ps = new PrintStream(bos)
+
+        when:
+        Main.solve(is, ps)
+
+        then:
+        def act = bos.toString()
+        output == act
+
+    }
 
 }
