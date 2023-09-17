@@ -8,18 +8,14 @@ class MainTest extends Specification {
     @Shared
     def input = [
 """\
-3
+299999
 
 """,
     ]
     @Shared
     def output = [
 """\
-Yes
-3
-2 1 2
-2 3 1
-2 2 3
+186783
 """,
     ]
     //@formatter:on

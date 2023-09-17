@@ -2,35 +2,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
 import java.util.function.Predicate;
 
+@SuppressWarnings("unchecked")
 public class Main {
-
     public static void main(String[] args) {
         solve(System.in, System.out);
+    }
+    private static void solve(PrintWriter pw, FastScanner fs) {
+        //==================
+        var N = fs.nextInt();
+        var A = fs.nextLong();
+        var B = fs.nextLong();
+        var Sn = fs.nextLongArray(N);
+
+        var ave = Arrays.stream(Sn).average().getAsDouble();
+        var max = Arrays.stream(Sn).max().getAsLong();
+        var min = Arrays.stream(Sn).min().getAsLong();
+
+        var std = max - min;
+        if (std == 0) {
+            pw.println(-1);
+            return;
+        }
+        var P = (double) B / std;
+
+        pw.println(P + " " + ((double) A - (ave * P)));
+        //==================
     }
 
     public static void solve(InputStream in, PrintStream out) {
         PrintWriter pw = new PrintWriter(out);
         FastScanner fs = new FastScanner(in);
-
-        //==================
-        int N = fs.nextInt();
-
-        String result = switch (N){
-            case 0 -> "zero";
-            case 1 -> "one";
-            case 2 -> new Test(2,3).x + "";
-            default -> "others";
-        };
-
-        pw.println(result);
-        //=================
-        pw.flush();
+        try {
+            solve(pw, fs);
+        } finally {
+            pw.flush();
+        }
     }
-
-    public static record Test(int x,int y){};
     //-------------------------------------------------------------------
 
     public static class FastScanner {
@@ -43,7 +55,7 @@ public class Main {
 
         public FastScanner(InputStream in) {
             this.in = in;
-            this.isPrintable = b -> (33 < b && b < 126);
+            this.isPrintable = b -> (33 <= b && b <= 126);
         }
 
         public FastScanner(InputStream in, Predicate<Byte> predicate) {
@@ -84,7 +96,7 @@ public class Main {
         }
 
         private boolean isPrintable(byte b) {
-            return 33 < b && b < 126;
+            return 33 <= b && b <= 126;
         }
 
 
@@ -102,7 +114,7 @@ public class Main {
         }
 
         public String next() {
-            return innerNext(b -> (33 < b && b < 126));
+            return innerNext(b -> (33 <= b && b <= 126));
         }
 
         public int nextInt() {
