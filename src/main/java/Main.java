@@ -2,37 +2,61 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class Main {
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
+
     private static void solve(PrintWriter pw, FastScanner fs) {
         //==================
-        var N = fs.nextInt();
-        var A = fs.nextLong();
-        var B = fs.nextLong();
-        var Sn = fs.nextLongArray(N);
 
-        var ave = Arrays.stream(Sn).average().getAsDouble();
-        var max = Arrays.stream(Sn).max().getAsLong();
-        var min = Arrays.stream(Sn).min().getAsLong();
+        var K = fs.nextInt();
 
-        var std = max - min;
-        if (std == 0) {
-            pw.println(-1);
-            return;
+        var bit = 0;
+
+        var set = new TreeSet<Long>();
+        while (bit < 1 << 10) {
+            var t = cal(bit);
+            if (t != 0) {
+                set.add(t);
+            }
+            bit++;
         }
-        var P = (double) B / std;
 
-        pw.println(P + " " + ((double) A - (ave * P)));
+        for (Long i : set) {
+            K--;
+            if (K == 0) {
+                pw.println(i);
+                return;
+            }
+        }
         //==================
     }
+
+    public static long cal(int bit) {
+        var ret = 0L;
+        var dig = 0L;
+        var exp = 1L;
+        while (bit > 0) {
+            if ((bit & 1) == 1) {
+                ret += dig * exp;
+                exp *= 10;
+            }
+            bit >>= 1;
+            dig++;
+        }
+        return ret;
+    }
+
+    //--------------
+    record Pair(int a, int b) {
+    }
+
 
     public static void solve(InputStream in, PrintStream out) {
         PrintWriter pw = new PrintWriter(out);
@@ -43,7 +67,9 @@ public class Main {
             pw.flush();
         }
     }
-    //-------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------
 
     public static class FastScanner {
         InputStream in;
