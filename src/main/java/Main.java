@@ -2,87 +2,59 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.Format;
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
+import java.util.function.*;
+import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("unchecked")
 public class Main {
+    private final PrintWriter pw;
+    private final FastScanner fs;
+
+    public Main(PrintWriter pw, FastScanner fs) {
+        this.pw = pw;
+        this.fs = fs;
+    }
+
     public static void main(String[] args) {
         solve(System.in, System.out);
     }
 
-    private static void solve(PrintWriter pw, FastScanner fs) {
-        //==================
+    private void solve() {
         var N = fs.ni();
-        var An = fs.nia(N);
+        var S = fs.nl();
+        var Ai = fs.nla(N);
 
-        var primeTable = prime(200_010);
+        var sum = Arrays.stream(Ai).sum();
+        var acc = new long[N + 1];
+        var set = new HashSet<Long>();
+        set.add(0l);
+        for (int i = 1; i < acc.length; i++) {
+            acc[i] = acc[i - 1] + Ai[i - 1];
+            set.add(acc[i]);
+            set.add(acc[i] + sum);
+        }
+        //debugArray(acc);
 
-        var ans = 0l;
-        var zeros = 0l;
-        var map2 = new HashMap<Long, Integer>();
-        for (int i = 0; i < An.length; i++) {
-            if (An[i] == 0) {
-                zeros++;
-                continue;
+        //debug(S % sum);
+        for (int i = 0; i < acc.length; i++) {
+            //debug(S % sum + acc[i]);
+            if (set.contains((Long) ((S % sum) + acc[i]))) {
+                pw.println("Yes");
+                return;
             }
-            Map<Long, Integer> map = factorization(An[i], primeTable);
-            var cnt = 1l;
-            for (var e : map.entrySet()) {
-                var key = e.getKey();
-                var value = e.getValue();
-                if (value % 2 == 1) {
-                    cnt *= key;
-                }
-            }
-            map2.merge(cnt, 1, Integer::sum);
         }
-        for (var e : map2.entrySet()) {
-            var k = e.getKey();
-            var v = (long)e.getValue();
-            ans += (v * (v - 1) / 2);
-        }
-        var nl = (long)N;
-        ans += (nl * (nl - 1) / 2) - ((nl - zeros) * (nl - zeros - 1) / 2);
-        pw.println(ans);
+        pw.println("No");
     }
 
+    public void temp() {
 
-    //Nまでの素数を判定する
-    public static int[] prime(int n) {
-        int[] result = new int[n + 1];
-        Arrays.fill(result, 0);
-        for (int i = 0; i < result.length; i++) {
-            result[i] = i;
-        }
-        for (int i = 2; i * i <= n; i++) {
-            if(result[i] == i){
-                for (int j = i * i; j <= n; j+=i) {
-                    if(result[j] == j){
-                        result[j] = i;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    //素因数分解
-    public static Map<Long, Integer> factorization(int n, int[] spf) {
-        Map<Long, Integer> map = new HashMap<>();
-        while (n != 1){
-            map.merge((long)spf[n], 1 , Integer::sum);
-            n /= spf[n];
-        }
-        return map;
     }
 
 
@@ -96,8 +68,21 @@ public class Main {
     record Pair(long a, long b) {
     }
 
+    record IntPair(int a, int b) {
+    }
+
     record Triple(long a, long b, long c) {
     }
+
+
+    private void Yes() {
+        pw.println("Yes");
+    }
+
+    private void No() {
+        pw.println("No");
+    }
+
 
     public static int[] concat(int[] a, int[] b) {
         var ret = new int[a.length + b.length];
@@ -126,14 +111,49 @@ public class Main {
         PrintWriter pw = new PrintWriter(out);
         FastScanner fs = new FastScanner(in);
         try {
-            solve(pw, fs);
+            new Main(pw, fs).solve();
         } finally {
             pw.flush();
         }
     }
 
 
-//-------------------------------------------------------------------
+    //-------------------------------------------------------------------
+    private static void debug(Object x) {
+        System.err.println(x);
+    }
+
+    private static void debugArray(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            debugArray(arr[i]);
+        }
+    }
+
+    private static void debugArray(long[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            debugArray(arr[i]);
+        }
+    }
+
+
+    private static void debugArray(int[] arr) {
+        debug(Arrays.toString(arr));
+    }
+
+    private static void debugArray(long[] arr) {
+        debug(Arrays.toString(arr));
+    }
+
+    private static void debugArray(boolean[] arr) {
+        debug(Arrays.toString(arr));
+    }
+
+    private static void debugArray(boolean[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            debugArray(arr[i]);
+        }
+    }
+
 
     /**
      * 各インデックスが配列の長さ以内に収まっているか境界チェックを行う
@@ -179,7 +199,7 @@ public class Main {
     }
 
 
-    //http://fantom1x.blog130.fc2.com/blog-entry-194.html
+//http://fantom1x.blog130.fc2.com/blog-entry-194.html
 
     /**
      * <h1>指定した値以上の先頭のインデクスを返す</h1>
@@ -227,161 +247,211 @@ public class Main {
         return low;
     }
 
-    //----------------
-    public static class FastScanner {
-        InputStream in;
-        byte[] buffer = new byte[1 << 10];
-        int length = 0;
-        int ptr = 0;
-        private final Predicate<Byte> isPrintable;
+//----------------
 
+    private boolean bet(long l, long v, long r) {
+        return l <= v && v < r;
+    }
 
-        public FastScanner(InputStream in) {
-            this.in = in;
-            this.isPrintable = b -> (33 <= b && b <= 126);
-        }
+    private int ni() {
+        return fs.ni();
+    }
 
-        public FastScanner(InputStream in, Predicate<Byte> predicate) {
-            this.in = in;
-            this.isPrintable = predicate;
-        }
+    private long nl() {
+        return fs.nl();
+    }
 
-        private boolean hasNextByte() {
-            if (ptr < length) {
-                return true;
-            }
-            try {
-                length = in.read(buffer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ptr = 0;
-            return length != 0;
-        }
+    private int[] nia(int N) {
+        return fs.nia(N);
+    }
 
+    private long[] nla(int N) {
+        return fs.nla(N);
+    }
 
-        private byte read() {
-            if (hasNextByte()) {
-                return buffer[ptr++];
-            }
-            return 0;
-        }
+    private int[][] nia(int N, int M) {
+        return fs.niaa(N, M);
+    }
 
-        private void skip() {
-            while (hasNextByte() && !isPrintable(buffer[ptr])) {
-                ptr++;
-            }
-        }
+    private long[][] nla(int N, int M) {
+        return fs.nlaa(N, M);
+    }
 
-        private boolean hasNext() {
-            skip();
-            return hasNextByte();
-        }
+    private String n() {
+        return fs.n();
+    }
 
-        private boolean isPrintable(byte b) {
-            return 33 <= b && b <= 126;
-        }
+    private String[] na(int n) {
+        return fs.na(n);
+    }
 
+    private char nc() {
+        return fs.n().toCharArray()[0];
+    }
 
-        private String innerNext(Predicate<Byte> isReadable) {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            StringBuilder sb = new StringBuilder();
-            byte b = read();
-            while (isReadable.test(b)) {
-                sb.appendCodePoint(b);
-                b = read();
-            }
-            return sb.toString();
-        }
+    private char[] nca() {
+        return fs.n().toCharArray();
+    }
 
-        public String n() {
-            return innerNext(b -> (33 <= b && b <= 126));
-        }
-
-        public int ni() {
-            return (int) nl();
-        }
-
-        public char[][] ncaa(int n, int m) {
-            var grid = new char[n][m];
-            for (int i = 0; i < n; i++) {
-                grid[i] = n().toCharArray();
-            }
-            return grid;
-        }
-
-        public int[] nia(int n) {
-            int[] result = new int[n];
-            for (int i = 0; i < n; i++) {
-                result[i] = ni();
-            }
-            return result;
-        }
-
-        public int[][] niaa(int h, int w) {
-            int[][] result = new int[h][w];
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    result[i][j] = ni();
-                }
-            }
-            return result;
-        }
-
-        public long[][] nlaa(int h, int w) {
-            long[][] result = new long[h][w];
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    result[i][j] = nl();
-                }
-            }
-            return result;
-        }
-
-        public String[] na(int n) {
-            String[] result = new String[n];
-            for (int i = 0; i < n; i++) {
-                result[i] = n();
-            }
-            return result;
-        }
-
-        public long[] nla(int n) {
-            long[] result = new long[n];
-            for (int i = 0; i < n; i++) {
-                result[i] = nl();
-            }
-            return result;
-        }
-
-        public long nl() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            long result = 0;
-            boolean minus = false;
-            byte b;
-
-            b = read();
-            if (b == '-') {
-                minus = true;
-                b = read();
-            }
-
-            while (isPrintable(b)) {
-                if (b < '0' || b > '9') {
-                    throw new NumberFormatException();
-                }
-                result *= 10;
-                result += (b - '0');
-                b = read();
-            }
-
-            return minus ? -result : result;
-        }
+    private char[][] ncaa(int n, int m) {
+        return fs.ncaa(n, m);
     }
 
 //-------------------------------------------------------------------
 }
+
+class FastScanner {
+    InputStream in;
+    byte[] buffer = new byte[1 << 10];
+    int length = 0;
+    int ptr = 0;
+    private final Predicate<Byte> isPrintable;
+
+
+    public FastScanner(InputStream in) {
+        this.in = in;
+        this.isPrintable = b -> (33 <= b && b <= 126);
+    }
+
+    public FastScanner(InputStream in, Predicate<Byte> predicate) {
+        this.in = in;
+        this.isPrintable = predicate;
+    }
+
+    private boolean hasNextByte() {
+        if (ptr < length) {
+            return true;
+        }
+        try {
+            length = in.read(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ptr = 0;
+        return length != 0;
+    }
+
+
+    private byte read() {
+        if (hasNextByte()) {
+            return buffer[ptr++];
+        }
+        return 0;
+    }
+
+    private void skip() {
+        while (hasNextByte() && !isPrintable(buffer[ptr])) {
+            ptr++;
+        }
+    }
+
+    private boolean hasNext() {
+        skip();
+        return hasNextByte();
+    }
+
+    private boolean isPrintable(byte b) {
+        return 33 <= b && b <= 126;
+    }
+
+
+    private String innerNext(Predicate<Byte> isReadable) {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        StringBuilder sb = new StringBuilder();
+        byte b = read();
+        while (isReadable.test(b)) {
+            sb.appendCodePoint(b);
+            b = read();
+        }
+        return sb.toString();
+    }
+
+    public String n() {
+        return innerNext(b -> (33 <= b && b <= 126));
+    }
+
+    public int ni() {
+        return (int) nl();
+    }
+
+    public char[][] ncaa(int n, int m) {
+        var grid = new char[n][m];
+        for (int i = 0; i < n; i++) {
+            grid[i] = n().toCharArray();
+        }
+        return grid;
+    }
+
+    public int[] nia(int n) {
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = ni();
+        }
+        return result;
+    }
+
+    public int[][] niaa(int h, int w) {
+        int[][] result = new int[h][w];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                result[i][j] = ni();
+            }
+        }
+        return result;
+    }
+
+    public long[][] nlaa(int h, int w) {
+        long[][] result = new long[h][w];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                result[i][j] = nl();
+            }
+        }
+        return result;
+    }
+
+    public String[] na(int n) {
+        String[] result = new String[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = n();
+        }
+        return result;
+    }
+
+    public long[] nla(int n) {
+        long[] result = new long[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = nl();
+        }
+        return result;
+    }
+
+    public long nl() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        long result = 0;
+        boolean minus = false;
+        byte b;
+
+        b = read();
+        if (b == '-') {
+            minus = true;
+            b = read();
+        }
+
+        while (isPrintable(b)) {
+            if (b < '0' || b > '9') {
+                throw new NumberFormatException();
+            }
+            result *= 10;
+            result += (b - '0');
+            b = read();
+        }
+
+        return minus ? -result : result;
+    }
+}
+
