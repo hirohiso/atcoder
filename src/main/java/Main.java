@@ -2,20 +2,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.Format;
 import java.util.*;
 import java.util.function.*;
-import java.util.jar.JarEntry;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @SuppressWarnings("unchecked")
 public class Main {
     private final PrintWriter pw;
     private final FastScanner fs;
+
+    private static boolean debug;
 
     public Main(PrintWriter pw, FastScanner fs) {
         this.pw = pw;
@@ -26,52 +21,29 @@ public class Main {
         solve(System.in, System.out);
     }
 
+
     private void solve() {
-        var N = fs.ni();
-        var S = fs.nl();
-        var Ai = fs.nla(N);
-
-        var sum = Arrays.stream(Ai).sum();
-        var acc = new long[N + 1];
-        var set = new HashSet<Long>();
-        set.add(0l);
-        for (int i = 1; i < acc.length; i++) {
-            acc[i] = acc[i - 1] + Ai[i - 1];
-            set.add(acc[i]);
-            set.add(acc[i] + sum);
-        }
-        //debugArray(acc);
-
-        //debug(S % sum);
-        for (int i = 0; i < acc.length; i++) {
-            //debug(S % sum + acc[i]);
-            if (set.contains((Long) ((S % sum) + acc[i]))) {
-                pw.println("Yes");
-                return;
-            }
-        }
-        pw.println("No");
-    }
-
-    public void temp() {
 
     }
 
 
-    //--------------
     record TPair<S, T>(S a, T b) {
     }
 
     record TTri<S, T, U>(S a, T b, U c) {
     }
 
-    record Pair(long a, long b) {
-    }
 
     record IntPair(int a, int b) {
     }
 
-    record Triple(long a, long b, long c) {
+    record LongPair(long a, long b) {
+    }
+
+    record IntTriple(int a, int b, int c) {
+    }
+
+    record LongTriple(long a, long b, long c) {
     }
 
 
@@ -84,33 +56,12 @@ public class Main {
     }
 
 
-    public static int[] concat(int[] a, int[] b) {
-        var ret = new int[a.length + b.length];
-        for (int i = 0; i < a.length; i++) {
-            ret[i] = a[i];
-        }
-        for (int i = 0; i < b.length; i++) {
-            ret[i + a.length] = b[i];
-        }
-        return ret;
-    }
-
-    public static long[] concat(long[] a, long[] b) {
-        var ret = new long[a.length + b.length];
-        for (int i = 0; i < a.length; i++) {
-            ret[i] = a[i];
-        }
-        for (int i = 0; i < b.length; i++) {
-            ret[i + a.length] = b[i];
-        }
-        return ret;
-    }
-
-
     public static void solve(InputStream in, PrintStream out) {
         PrintWriter pw = new PrintWriter(out);
         FastScanner fs = new FastScanner(in);
         try {
+            var atcoder = System.getenv("ATCODER");
+            debug = !("1".equals(atcoder));
             new Main(pw, fs).solve();
         } finally {
             pw.flush();
@@ -120,16 +71,50 @@ public class Main {
 
     //-------------------------------------------------------------------
     private static void debug(Object x) {
+        if (!debug) {
+            return;
+        }
         System.err.println(x);
     }
 
+    private static void debug(String format, Object... x) {
+        if (!debug) {
+            return;
+        }
+        System.err.println(String.format(format, x));
+    }
+
     private static void debugArray(int[][] arr) {
+        if (!debug) {
+            return;
+        }
         for (int i = 0; i < arr.length; i++) {
             debugArray(arr[i]);
         }
     }
 
+    private static void debugArray(double[][] arr) {
+        if (!debug) {
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            debugArray(arr[i]);
+        }
+    }
+
+    private static void debugArray(char[][] arr) {
+        if (!debug) {
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            debug(new String(arr[i]));
+        }
+    }
+
     private static void debugArray(long[][] arr) {
+        if (!debug) {
+            return;
+        }
         for (int i = 0; i < arr.length; i++) {
             debugArray(arr[i]);
         }
@@ -137,44 +122,64 @@ public class Main {
 
 
     private static void debugArray(int[] arr) {
+        if (!debug) {
+            return;
+        }
+        debug(Arrays.toString(arr));
+    }
+
+    private static void debugArray(double[] arr) {
+        if (!debug) {
+            return;
+        }
+        debug(Arrays.toString(arr));
+    }
+
+    private static <T> void debugArray(T[] arr) {
+        if (!debug) {
+            return;
+        }
         debug(Arrays.toString(arr));
     }
 
     private static void debugArray(long[] arr) {
+        if (!debug) {
+            return;
+        }
         debug(Arrays.toString(arr));
     }
 
     private static void debugArray(boolean[] arr) {
+        if (!debug) {
+            return;
+        }
         debug(Arrays.toString(arr));
     }
 
     private static void debugArray(boolean[][] arr) {
+        if (!debug) {
+            return;
+        }
         for (int i = 0; i < arr.length; i++) {
             debugArray(arr[i]);
         }
     }
 
 
-    /**
-     * 各インデックスが配列の長さ以内に収まっているか境界チェックを行う
-     * <p>
-     * 多次元配列のチェックをいちいち書くのがしんどい時に。
-     * arrayBound(new int[]{1,2,3} , new int[]{3,4,3})
-     *
-     * @param target 配列に設定したいインデックス
-     * @param len    　配列の長さ
-     * @return 配列の長さ内に収まってる時 true
-     */
-    private static boolean inarr(int[] target, int[] len) {
-        var b = true;
-        if (target.length != len.length) {
-            throw new IllegalArgumentException();
+    static long modInv(long a, long m) {
+        var result = 1L;
+        var n = m - 2;
+        var x = a % m;
+        while (n > 0) {
+            if ((n & 0b1) == 0b1) {
+                result = (result * x) % m;
+            }
+            x = (x * x) % m;
+            n >>= 1;
         }
-        for (int i = 0; i < target.length; i++) {
-            b &= (0 <= target[i] && target[i] < len[i]);
-        }
-        return b;
+        return result;
     }
+
 
     private static int[] arr(int... a) {
         return Arrays.copyOf(a, a.length);
@@ -196,6 +201,174 @@ public class Main {
             }
         }
         return result;
+    }
+
+    //時計周り90回転
+    private static int[][] rrot(int[][] grid) {
+        var h = grid.length;
+        var w = grid[0].length;
+        var result = new int[w][h];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                result[j][h - 1 - i] = grid[i][j];
+            }
+        }
+        return result;
+    }
+
+    private static char[][] rot(char[][] grid) {
+        var h = grid.length;
+        var w = grid[0].length;
+
+        var result = new char[w][h];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                result[w - 1 - j][i] = grid[i][j];
+            }
+        }
+        return result;
+    }
+
+    //時計周り90回転
+    private static char[][] rrot(char[][] grid) {
+        var h = grid.length;
+        var w = grid[0].length;
+        var result = new char[w][h];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                result[j][h - 1 - i] = grid[i][j];
+            }
+        }
+        return result;
+    }
+
+    private long pow(long a, long b) {
+        var ans = 1l;
+        while (b != 0) {
+            ans *= a;
+            b--;
+        }
+        return ans;
+    }
+
+    /*
+     * 繰り返し二乗法
+     */
+    static long powmod(long a, long n, long m) {
+        var result = 1l;
+        var x = a % m;
+        while (n > 0l) {
+            if ((n & 1l) == 1l) {
+                result = (result * x) % m;
+            }
+            x = (x * x) % m;
+            n >>= 1l;
+        }
+        return result;
+    }
+
+
+    private int[] foldl(int[] arr, IntBinaryOperator o, IntSupplier e, boolean containZero) {
+        var init = e.getAsInt();
+        int[] result;
+        if (containZero) {
+            result = new int[arr.length + 1];
+            result[0] = init;
+        } else {
+            result = new int[arr.length];
+            result[0] = arr[0];
+        }
+        for (int i = 1; i < result.length; i++) {
+            result[i] = o.applyAsInt(result[i - 1], arr[containZero ? i - 1 : i]);
+        }
+        return result;
+    }
+
+    private int[] foldr(int[] arr, IntBinaryOperator o, IntSupplier e, boolean containZero) {
+        var init = e.getAsInt();
+        int[] result;
+        if (containZero) {
+            result = new int[arr.length + 1];
+            result[arr.length] = init;
+        } else {
+            result = new int[arr.length];
+            result[arr.length - 1] = arr[arr.length - 1];
+        }
+        for (int i = result.length - 2; i >= 0; i--) {
+            result[i] = o.applyAsInt(arr[containZero ? i : i + 1], result[i + 1]);
+        }
+        return result;
+    }
+
+    private long[] foldl(long[] arr, LongBinaryOperator o, LongSupplier e, boolean containZero) {
+        var init = e.getAsLong();
+        long[] result;
+        if (containZero) {
+            result = new long[arr.length + 1];
+            result[0] = init;
+        } else {
+            result = new long[arr.length];
+            result[0] = arr[0];
+        }
+        for (int i = 1; i < result.length; i++) {
+            result[i] = o.applyAsLong(result[i - 1], arr[containZero ? i - 1 : i]);
+        }
+        return result;
+    }
+
+    private long[] foldr(long[] arr, LongBinaryOperator o, LongSupplier e, boolean containZero) {
+        var init = e.getAsLong();
+        long[] result;
+        if (containZero) {
+            result = new long[arr.length + 1];
+            result[arr.length] = init;
+        } else {
+            result = new long[arr.length];
+            result[arr.length - 1] = arr[arr.length - 1];
+        }
+        for (int i = result.length - 2; i >= 0; i--) {
+            result[i] = o.applyAsLong(arr[containZero ? i : i + 1], result[i + 1]);
+        }
+        return result;
+    }
+
+    private int[] reverseArray(int[] arr) {
+        var reversed = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            reversed[i] = arr[arr.length - 1 - i];
+        }
+        return reversed;
+    }
+
+    private long[] reverseArray(long[] arr) {
+        var reversed = new long[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            reversed[i] = arr[arr.length - 1 - i];
+        }
+        return reversed;
+    }
+
+    private int[] sort(int[] arr) {
+        var result = Arrays.copyOf(arr, arr.length);
+        Arrays.sort(result);
+        return result;
+    }
+
+    private long[] sort(long[] arr) {
+        var result = Arrays.copyOf(arr, arr.length);
+        Arrays.sort(result);
+        return result;
+    }
+
+
+    private static long isqrt(long n) {
+        var x = n;
+        var y = (x + 1) / 2;
+        while (y < x) {
+            x = y;
+            y = (n / y + y) / 2;
+        }
+        return x;
     }
 
 
@@ -269,11 +442,11 @@ public class Main {
         return fs.nla(N);
     }
 
-    private int[][] nia(int N, int M) {
+    private int[][] niaa(int N, int M) {
         return fs.niaa(N, M);
     }
 
-    private long[][] nla(int N, int M) {
+    private long[][] nlaa(int N, int M) {
         return fs.nlaa(N, M);
     }
 
@@ -454,4 +627,6 @@ class FastScanner {
         return minus ? -result : result;
     }
 }
+
+
 
