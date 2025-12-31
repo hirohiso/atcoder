@@ -1,0 +1,22 @@
+Start at 2024/11/19 22:25
+https://atcoder.jp/contests/abc220/tasks/abc220_d
+
+A[i] A[i + 1]を操作した時後の一番左の数字を表すDP
+割ってなくてWA w
+
+https://atcoder.jp/contests/abc225/tasks/abc225_d
+双方向リストの問題？
+クエリ3が全体で10^6だけなので、union find使わずにいける
+End at 2024/11/19 22:47
+
+10
+1 1 1 1 2 2 3 3 3 3
+
+10
+1 2 3 4 5 6 7 8 9 9
+
+10
+1 2 3 4 5 6 7 8 9 10
+
+10
+3 3 3 4 4 4 5 5 6 6

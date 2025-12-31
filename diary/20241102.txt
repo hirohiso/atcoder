@@ -1,0 +1,15 @@
+Diary entry for 20241102
+
+
+60min
+
+https://atcoder.jp/contests/abc350/tasks/abc350_d
+UnionFindで繋がっているグループの要素数をカウント、
+クリークだと思えば良い。すでに繋がっている関係数分引けば良い。
+
+
+https://atcoder.jp/contests/abc303/tasks/abc303_d
+DP
+
+https://atcoder.jp/contests/abc340/tasks/abc340_d
+ダイクストラ

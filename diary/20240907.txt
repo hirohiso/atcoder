@@ -1,0 +1,108 @@
+Diary entry for 20240907
+
+11:08 - 13:46
+https://atcoder.jp/contests/abc309/tasks/abc309_d
+0から最も遠い店とNから最も遠い点を結んだパスが最長になる。
+ダイクストラ使ったけど、辺のコストが１なのでBFSでもよかった説はある。
+
+BFSのアルゴリズム
+
+隣接リスト(ArrayLIstを使うLinkedListだとgetがO(N)になるよ)
+訪問済リスト
+キューに開始点sを入れる
+訪問ずみリスト[s]をtrue
+レベルリスト[s] := 0
+親リスト[s] := -1
+
+while(キュー.size != 0){
+ var n = キュー.pop
+ for n -> next
+  if(訪問済みリスト[next] != true){
+   キューにnextを入れる
+   訪問ずみリスト[next]をtrue
+   レベルリスト[next] := レベルリスト[n] +1
+   親リスト[next] := n
+  }
+}
+
+https://atcoder.jp/contests/abc270/tasks/abc270_c
+幅優先探索して親を覚えておけば良い。
+隣接リストをLinkedListで構築してしまったのでTLEになった
+
+https://atcoder.jp/contests/abc324/tasks/abc324_c
+わからない。
+T`とSが与えられて編集距離が0または1であることを確かめる。
+レーベンシュタイン距離をまともに求めるとN * N になるので解法としては不適。
+
+なので添字i jを用意して、
+全て一致、または１文字どこかでずらすことで一致することを確認する。
+一度ずらした場合はフラグを立てて、不一致文字が現れたらSi != Tと判断する。
+
+削除/追加パターンはTとSの長さが1違うこと
+１文字変更パターンはTとSの長さが一致すること
+などを入れたがWAになる。
+
+>全て一致、または１文字どこかでずらすことで一致することを確認する。
+この判定を入れていたためWAになっていた。
+不一致文字が現れたら、TとSの長さをみて、フラグだてとi/jの更新を適切に行うだけでよかった。
+
+なぜこの違いだけでエラーになるのか？
+i + 1 < T.length && T[i + 1] == Td[j] && T.length > Td.length
+                    i++;
+                    b = true;
+                    continue;
+と
+T.length > Td.length
+                    i++;
+                    b = true;
+                    continue;
+後に
+        while (i < T.length && j < Td.length) {
+            if (T[i] != Td[j]) {
+
+            }
+の判定を行うことに違いがあるか？
+i + 1 < T.length  := false
+T[i + 1] == Td[j] := false
+T.length > Td.length := true
+b:= false
+このケースで
+前者がreturn false,後者はreturn trueである。
+Td = i
+
+i
+a
+else if (j + 1 < Td.length && i + 1 < T.length && T[i + 1] == Td[j + 1] && T.length == Td.length) {
+                    b = true;
+                    i++;
+                    j++;
+                    continue;
+                }
+この判定がおかしかった。
+TとSの末尾不一致の場合に j + 1もi + 1も無いので、return falseになってしまう。
+
+T/Sの長さによって場合わけしておけば簡単だった気もする。
+添字もiだけにしてしまっていたので実装が複雑になっている。
+回答は両側から一致文字数を見ていく方式だった
+
+T:=abcdefg (7
+S:=abcd fg (6
+最長でも6文字一致する
+
+4 : 2　 = 6
+
+A + B >= T -1とかがわからない。
+
+T:=abceefg (7
+S:=abcefg (6
+
+T:=abceeefg (8
+S:=abce  fg (7
+S:=abc  efg (6
+T -1 = Tdを見ているので、
+1文字だけ違いがある。
+xxxxaaaayyyy
+xxxxx|xxxxx
+
+A + Bの上界と下界で考えれば良い？
+2箇所違いの上界がT(T`)未満であり、1箇所違いの下界がT(T`)以上であれば、条件は成立する。

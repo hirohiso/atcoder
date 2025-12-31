@@ -1,0 +1,21 @@
+Diary entry for 20241026
+
+
+
+格子点上の正方形
+
+x1
+y1
+
+x2 = x1 + dx
+y2 = y1 + dy
+
+x3 = x2 - dy = x1 + dx - dy
+y3 = y2 + dx = y1 + dy + dx
+
+x4 = x3 - dx = x2 - dy - dx = x1 + dx - dy - dx = x1 - dy
+y4 = y3 - dy = y2 + dx - dy = y1 + dy + dx - dy = y1 + dx
+============
+x3 - x1 = dx - dy
+y3 - y1 = dy + dx
+

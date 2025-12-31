@@ -1,0 +1,10 @@
+Diary entry for 20240819
+
+19:08 - 19:15
+https://atcoder.jp/contests/abc269/tasks/abc269_d
+
+グリッドが隣あっているか判定して、
+UnionFindでまとめていければ、よし。
+N <= 1000なので、愚直に隣接しているか判定できる。
+
+差分はdxとdyで別々に定義した方が楽なことに気づいた。

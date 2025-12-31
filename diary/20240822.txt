@@ -1,0 +1,25 @@
+Diary entry for 20240822
+
+9:16 - 9:30
+https://atcoder.jp/contests/abc308/tasks/abc308_c
+単純にソートを行うだけ。
+除算をしてしまうと誤差が怖いので、分母を払ってあげる。
+Comparatorの書き方を忘れてしまった。ラムダ式を書いてあげれば、良い。
+Integer.compareって便利メソッドがある。知らなかった。
+
+自分のコード
+        list.sort(
+                (p, q) -> (q.a + q.b) * p.a < (p.a + p.b) * q.a ? 1 :
+                        (q.a + q.b) * p.a > (p.a + p.b) * q.a ? -1 :
+                                p.c < q.c ? -1 : 1
+
+        );
+
+上位の人のコード
+        Arrays.sort(p, (i, j) -> {
+            final long jud1 = i.x * (j.x + j.y);
+            final long jud2 = j.x * (i.x + i.y);
+            if (jud1 == jud2)
+                return Integer.compare(i.idx, j.idx);
+            return Long.compare(jud2, jud1);
+        });

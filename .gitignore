@@ -6,3 +6,7 @@ build
 
 /out/**
 *.hprof
+
+/build/**
+/lib/**
+/bin/**

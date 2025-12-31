@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class Main {
@@ -21,11 +22,91 @@ public class Main {
         solve(System.in, System.out);
     }
 
+    static int mod = 998244353;
 
     private void solve() {
+        var N = ni();
+        var K = ni();
+        nFact = 1;
+        for (int i = 1; i <= N; i++) {
+            nFact *= i;
+            nFact %= mod;
+        }
 
+        var ret = new ArrayList<List<Integer>>();
+        var v = new ArrayList<Integer>();
+        partition(N, N, v, ret);
+
+
+        var ans = 0L;
+        for (var list : ret) {
+            //debug(list);
+            var t = cal(list, K);
+            //debug(t);
+            ans += t;
+            ans %= mod;
+        }
+        pw.println(ans);
     }
 
+    long nFact;
+
+    private long cal(List<Integer> list, int K) {
+
+
+        //A*B*C*....
+        var deno = 1L;
+        for (var v : list) {
+            deno *= v;
+            deno %= mod;
+        }
+
+        //A,B,C,,,,の入れ替え(組を区別しない list.size()!
+        var map = list.stream().collect(Collectors.groupingBy(
+                v -> v
+        ));
+        var k = 1L;
+        for (var e : map.entrySet()) {
+            for (int i = 1; i <= e.getValue().size(); i++) {
+                k *= i;
+                k %= mod;
+            }
+        }
+        var invK = modInv(k, mod);
+
+        //最小公倍数を求める
+        var lcm = 1L;
+        for (var v : list) {
+            lcm = lcm(lcm, v);
+        }
+        var invDeno = modInv(deno, mod) * invK % mod;
+        var temp = (nFact * invDeno % mod);
+        //debug("lcm %d temp %d", lcm, temp);
+        var plcm = powmod(lcm, K, mod);
+        return ((temp * plcm) % mod);
+    }
+
+    private long lcm(long a, long b) {
+        long temp;
+        long c = a;
+        c *= b;
+        while ((temp = a % b) != 0) {
+            a = b;
+            b = temp;
+        }
+        return (long) (c / b);
+    }
+
+    private static void partition(int n, int max, ArrayList<Integer> v, ArrayList<List<Integer>> ret) {
+        if (n == 0) {
+            ret.add(v.stream().toList());
+        }
+        for (int i = Math.min(n, max); i > 0; i--) {
+            v.add(i);
+            partition(n - i, i, v, ret);
+            v.remove(v.size() - 1);
+        }
+    }
 
     record TPair<S, T>(S a, T b) {
     }
@@ -189,7 +270,6 @@ public class Main {
         return Arrays.copyOf(a, a.length);
     }
 
-    //半時計90度回転
     private static int[][] rot(int[][] grid) {
         var h = grid.length;
         var w = grid[0].length;
@@ -242,8 +322,18 @@ public class Main {
         return result;
     }
 
+    //dの桁数
+    private int countDigits(long d) {
+        var ret = 0;
+        while (d > 0) {
+            ret++;
+            d /= 10;
+        }
+        return ret;
+    }
+
     private long pow(long a, long b) {
-        var ans = 1l;
+        var ans = 1L;
         while (b != 0) {
             ans *= a;
             b--;
@@ -340,6 +430,7 @@ public class Main {
         return reversed;
     }
 
+
     private long[] reverseArray(long[] arr) {
         var reversed = new long[arr.length];
         for (int i = 0; i < arr.length; i++) {
@@ -370,6 +461,55 @@ public class Main {
         }
         return x;
     }
+    //State
+
+    //HashMapで取り扱えるようにarrをラップしたstate
+    //ハッシュ値の計算やオブジェクト同士の比較にO(|arr|)かかる
+    record ArrayState(int[] arr) {
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            ArrayState arrayState = (ArrayState) o;
+            return Objects.deepEquals(arr, arrayState.arr);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(arr);
+        }
+
+        public static ArrayState e = new ArrayState(new int[]{});
+
+        public int lastNum() {
+            if (this.arr.length == 0) {
+                return -1;
+            }
+            return this.arr[this.arr.length - 1];
+        }
+
+        public int len() {
+            return this.arr.length;
+        }
+
+        public ArrayState append(int v) {
+            var narr = Arrays.copyOf(this.arr, this.arr.length + 1);
+            narr[narr.length - 1] = v;
+            return new ArrayState(narr);
+        }
+
+        public ArrayState replace(int v, int index) {
+            var narr = Arrays.copyOf(this.arr, this.arr.length);
+            narr[index] = v;
+            return new ArrayState(narr);
+        }
+
+        @Override
+        public String toString() {
+            return Arrays.toString(arr);
+        }
+    }
+
+    //----------------------
 
 
 //http://fantom1x.blog130.fc2.com/blog-entry-194.html
@@ -387,7 +527,7 @@ public class Main {
         int high = arr.length;
         int mid;
         while (low < high) {
-            mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+            mid = ((high - low) >>> 1) + low;
             if (arr[mid] < value) {
                 low = mid + 1;
             } else {
@@ -410,7 +550,7 @@ public class Main {
         int high = arr.length;
         int mid;
         while (low < high) {
-            mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+            mid = ((high - low) >>> 1) + low;
             if (arr[mid] <= value) {
                 low = mid + 1;
             } else {
@@ -627,6 +767,3 @@ class FastScanner {
         return minus ? -result : result;
     }
 }
-
-
-

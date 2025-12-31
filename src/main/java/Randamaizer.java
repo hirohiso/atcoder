@@ -11,13 +11,16 @@ public class Randamaizer {
 
     private static void large(String[] args) {
         InputBuilder gen = new InputBuilder();
-        String input = gen
-                .addInt("N", 3, 5)
-                .addInt("M", 3, 6)
-                //.addArray("A", "N", 1, 100)
-                .addGraph("G", "N", "M", true)
-                .build();
-        System.out.println(input);
+        var M = 2_00000;
+        gen.addInt("N", 2_00000, 2_00000)
+                .addInt("M", M, M)
+                .addArray("A", "N", 0, 998244352);
+        for (int i = 0; i < M; i++) {
+            gen.addInt("L" + i, 1, 1);
+            gen.addInt("R" + i, 2_00000, 2_00000);
+        }
+        String input = gen.build();
+        //System.out.println(input);
         ByteArrayInputStream testInput = new ByteArrayInputStream(input.getBytes());
         Main.solve(testInput, System.out);
     }

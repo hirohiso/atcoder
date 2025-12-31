@@ -1,0 +1,23 @@
+Diary entry for 20241116 14:57
+
+
+https://atcoder.jp/contests/abc212/tasks/abc212_d
+
+オフラインで処理する。
+最初に加算される分を全部足し込む。
+
+累積和を考えるとよい。
+
+
+
+https://atcoder.jp/contests/abc213/tasks/abc213_d
+LinkedListのgetがO(n)なのとPriorityQueueのiteratorが順序保証されないのを忘れていた
+
+このクラスとそのイテレータは、CollectionおよびIteratorインタフェースの任意メソッドすべてを実装します。
+iterator()メソッド内で提供されるIteratorでは、特定の順序で優先度キューの要素をトラバースすることは保証されません。
+要素をトラバースする順序を指定する必要がある場合は、Arrays.sort(pq.toArray())の使用を考慮してください。
+
+https://atcoder.jp/contests/abc215/tasks/abc215_d
+素因数の列挙はルートNまたはlogNで可能。
+
+Endtime 2024/11/16 16:12

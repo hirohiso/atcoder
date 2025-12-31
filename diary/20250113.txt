@@ -1,0 +1,19 @@
+Start at 2025/01/13 15:55
+https://atcoder.jp/contests/abc286/tasks/abc286_e
+
+最初はクエリごとにBFSをしたがタイムアウトした。
+Q が最大で90000
+また辺数が最大で90000くらいになるので、タイムアウトする
+
+N = 300なので N^3でもなんとかなりそうなので、ワーシャルフロイドが使えないか考える。
+
+こいつは d[i][k] d[k][j]を全通り試してくれるので、モノイドが乗っていてもなんとかなるかも？
+ということでやる
+
+
+https://atcoder.jp/contests/abc287/tasks/abc287_e
+解答例Javaで実装するの難しい？
+stack overflowになる
+再帰関数呼び出すごとに26個のLinkedListを作成している。
+
+HashMapで必要なcharのみLinkedListを作るようにしたらパスした。けど最初の解放より遅い・・・・
