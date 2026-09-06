@@ -9,10 +9,8 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
     // Apply the application plugin to add support for building an application
     id 'application'
-    id 'groovy'
 }
 
 repositories {
@@ -25,15 +23,9 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
-dependencies {
-    // This dependency is found on compile classpath of this component and consumers.
-    implementation 'com.google.guava:guava:27.0.1-jre'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
-    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-}
 java{
     toolchain{
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(24)
     }
 }
 test {
